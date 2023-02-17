@@ -28,4 +28,10 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	//Getters and setters for functionality
+	void setWithinRadius(bool s) { isWithinRadius_ = s; }
+	bool isWithinRadius() { return isWithinRadius_; }
+
+protected: //Variables for functionality
+	bool isWithinRadius_; 
 };

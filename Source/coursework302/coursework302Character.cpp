@@ -4,9 +4,11 @@
 #include "coursework302Projectile.h"
 #include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
+#include "Components/SphereComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
 #include "GameFramework/InputSettings.h"
+#include "Stake.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -34,12 +36,22 @@ Acoursework302Character::Acoursework302Character()
 	Mesh1P->CastShadow = false;
 	Mesh1P->SetRelativeRotation(FRotator(1.9f, -19.19f, 5.2f));
 	Mesh1P->SetRelativeLocation(FVector(-0.5f, -4.4f, -155.7f));
+
+	//Radius sphere for detecting stakes
+	PlayerRadius = CreateDefaultSubobject<USphereComponent>(TEXT("Radius Collision"));
+	PlayerRadius->InitSphereRadius(400.f); //Add dimensions to it
+	PlayerRadius->SetupAttachment(GetCapsuleComponent()); //Attaching the collider to the player's mesh
 }
 
 void Acoursework302Character::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
+
+	//Attaching the collision functions to the collider
+	PlayerRadius->OnComponentBeginOverlap.AddDynamic(this, &Acoursework302Character::beginOverlapRadius);
+	PlayerRadius->OnComponentEndOverlap.AddDynamic(this, &Acoursework302Character::endOverlapRadius);
+
 	
 }
 
@@ -145,4 +157,22 @@ bool Acoursework302Character::EnableTouchscreenMovement(class UInputComponent* P
 	}
 	
 	return false;
+}
+
+void Acoursework302Character::beginOverlapRadius(UPrimitiveComponent* overlapRadiusComp, AActor* otherActor, UPrimitiveComponent* otherComponent, int32 otherBodyIndex, bool fromSweep, const FHitResult& sweepResult) {
+	//Check when you overlap radius collider with stake collider
+	AStake* stake_ = Cast<AStake>(otherActor);
+	if (IsValid(stake_)) { //Check if the ptr to this class is valid
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("Stake in range"));
+		stake_->setWithinRadius(true);
+	}
+}
+void Acoursework302Character::endOverlapRadius(UPrimitiveComponent* overlapRadiusComp, AActor* otherActor, UPrimitiveComponent* otherComponent, int32 otherBodyIndex) {
+	//Check when you dont overlap radius collider with stake collider
+	AStake* stake_ = Cast<AStake>(otherActor);
+	if (IsValid(stake_)) { //Check if the ptr to this class is valid
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("Stake out of range"));
+
+		stake_->setWithinRadius(false);
+	}
 }

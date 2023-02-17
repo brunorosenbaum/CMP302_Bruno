@@ -55,6 +55,12 @@ protected:
 	/** Handles strafing movement, left and right */
 	void MoveRight(float Val);
 
+	//Two functions needed: begin overlap and end overlap for the radius collider
+	UFUNCTION() //Needs to have this tag if you want it to be accessed in the blueprint
+	void beginOverlapRadius(UPrimitiveComponent* overlapRadiusComp, AActor* otherActor, UPrimitiveComponent* otherComponent, int32 otherBodyIndex, bool fromSweep, const FHitResult& sweepResult);
+	
+	UFUNCTION()
+		void endOverlapRadius(UPrimitiveComponent* overlapRadiusComp, AActor* otherActor, UPrimitiveComponent* otherComponent, int32 otherBodyIndex);
 	/**
 	 * Called via input to turn at a given rate.
 	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
@@ -98,6 +104,9 @@ public:
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 	/** Returns FirstPersonCameraComponent subobject **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
+	//Add sphere collider for the player to detect stakes around it
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+		class USphereComponent* PlayerRadius; 
 
 };
 

@@ -18,7 +18,7 @@ AStake::AStake()
 void AStake::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	setWithinRadius(false); //Default should be false unless colliding with player's radius
 }
 
 // Called every frame
