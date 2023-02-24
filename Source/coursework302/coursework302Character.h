@@ -32,6 +32,7 @@ class Acoursework302Character : public ACharacter
 
 public:
 	Acoursework302Character();
+	virtual void Tick(float DeltaTime) override; 
 
 protected:
 	virtual void BeginPlay();
@@ -49,6 +50,9 @@ protected:
 	/** Fires a projectile. */
 	void OnPrimaryAction();
 
+	//Detect stakes inside radius
+	void detectStakes();
+
 	/** Handles moving forward/backward */
 	void MoveForward(float Val);
 
@@ -57,10 +61,21 @@ protected:
 
 	//Two functions needed: begin overlap and end overlap for the radius collider
 	UFUNCTION() //Needs to have this tag if you want it to be accessed in the blueprint
-	void beginOverlapRadius(UPrimitiveComponent* overlapRadiusComp, AActor* otherActor, UPrimitiveComponent* otherComponent, int32 otherBodyIndex, bool fromSweep, const FHitResult& sweepResult);
+		void beginOverlapRadius(UPrimitiveComponent* overlapRadiusComp, AActor* otherActor, UPrimitiveComponent* otherComponent, int32 otherBodyIndex, bool fromSweep, const FHitResult& sweepResult);
 	
 	UFUNCTION()
 		void endOverlapRadius(UPrimitiveComponent* overlapRadiusComp, AActor* otherActor, UPrimitiveComponent* otherComponent, int32 otherBodyIndex);
+	
+	//These functions are for the mouse press and its effect on raising the stakes
+	void onPressMouse() { isMousePressed_ = true; 
+	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Magenta, TEXT("Mouse pressed"));
+	}
+	void onReleaseMouse() { isMousePressed_ = false; 
+	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Magenta, TEXT("Mouse released"));
+	}
+
+
+	
 	/**
 	 * Called via input to turn at a given rate.
 	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate
@@ -83,8 +98,10 @@ protected:
 	};
 	void BeginTouch(const ETouchIndex::Type FingerIndex, const FVector Location);
 	void EndTouch(const ETouchIndex::Type FingerIndex, const FVector Location);
-	void TouchUpdate(const ETouchIndex::Type FingerIndex, const FVector Location);
 	TouchData	TouchItem;
+
+	//Attributes
+	bool isMousePressed_;
 	
 protected:
 	// APawn interface

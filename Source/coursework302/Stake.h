@@ -32,6 +32,18 @@ public:
 	void setWithinRadius(bool s) { isWithinRadius_ = s; }
 	bool isWithinRadius() { return isWithinRadius_; }
 
+	void setActive(bool a) { isActive_ = a; }
+	bool isActive() { return isActive_; }
+
+	void setTimerActive(bool t) { isTimerActive_ = t; }
+	bool isTimerActive() { return isTimerActive_; }
+
+
+
 protected: //Variables for functionality
 	bool isWithinRadius_; 
+	bool isActive_;
+	bool isTimerActive_;
+
+	float timer_ = 0.0f; 
 };

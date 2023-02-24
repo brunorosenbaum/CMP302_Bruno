@@ -55,6 +55,11 @@ void Acoursework302Character::BeginPlay()
 	
 }
 
+void Acoursework302Character::Tick(float DeltaTime) {
+	Super::Tick(DeltaTime);
+	detectStakes();
+}
+
 //////////////////////////////////////////////////////////////////////////// Input
 
 void Acoursework302Character::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -66,11 +71,6 @@ void Acoursework302Character::SetupPlayerInputComponent(class UInputComponent* P
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
-	// Bind fire event
-	PlayerInputComponent->BindAction("PrimaryAction", IE_Pressed, this, &Acoursework302Character::OnPrimaryAction);
-
-	// Enable touchscreen input
-	EnableTouchscreenMovement(PlayerInputComponent);
 
 	// Bind movement events
 	PlayerInputComponent->BindAxis("Move Forward / Backward", this, &Acoursework302Character::MoveForward);
@@ -83,6 +83,12 @@ void Acoursework302Character::SetupPlayerInputComponent(class UInputComponent* P
 	PlayerInputComponent->BindAxis("Look Up / Down Mouse", this, &APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAxis("Turn Right / Left Gamepad", this, &Acoursework302Character::TurnAtRate);
 	PlayerInputComponent->BindAxis("Look Up / Down Gamepad", this, &Acoursework302Character::LookUpAtRate);
+
+	//Bind mouse bool functions to the mouse input
+	PlayerInputComponent->BindAction("PrimaryAction", IE_Pressed, this, &Acoursework302Character::onPressMouse);
+	PlayerInputComponent->BindAction("PrimaryAction", IE_Released, this, &Acoursework302Character::onReleaseMouse);
+
+
 }
 
 void Acoursework302Character::OnPrimaryAction()
@@ -174,5 +180,22 @@ void Acoursework302Character::endOverlapRadius(UPrimitiveComponent* overlapRadiu
 		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("Stake out of range"));
 
 		stake_->setWithinRadius(false);
+	}
+}
+
+void Acoursework302Character::detectStakes() {
+	for (TObjectIterator<AStake> stake; stake; ++stake) { //Iterate through all stakes in the world
+		if (stake->GetWorld() != GetWorld()) {//Check if it's in the same world as main character
+			continue; //Move on to the next stake if not
+		}
+		//Check if the current one is within the radius of detection 
+		if (stake->isWithinRadius()) {
+			if (isMousePressed_) { //If the mouse is pressed, toddle bool for timer
+				stake->setTimerActive(true);
+				if (stake->isActive()) { //If three seconds of the timer have passed (active bool turns stake on active)
+					GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("Stake would be ready for physics"));
+				}
+			}
+		}
 	}
 }

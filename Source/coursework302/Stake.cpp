@@ -19,12 +19,26 @@ void AStake::BeginPlay()
 {
 	Super::BeginPlay();
 	setWithinRadius(false); //Default should be false unless colliding with player's radius
+	setTimerActive(false);
+	setActive(false); 
 }
 
 // Called every frame
 void AStake::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	if (isTimerActive()) {
+		timer_ += DeltaTime;
+	}
+	else {
+		timer_ = 0.0f;
+		setActive(false);
+	}
 
+	//Check if timer > 3 seconds, activate a bool
+	if (timer_ > 3.0f) {
+		setActive(true);
+	}
+	
 }
 
