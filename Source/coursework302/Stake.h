@@ -5,14 +5,17 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/BoxComponent.h" //For adding a spheric collision into the world - need this header
+#include "GameFramework/ProjectileMovementComponent.h"
 #include "Stake.generated.h"
+
+
 
 UCLASS()
 class COURSEWORK302_API AStake : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	// Sets default values for this actor's properties
 	AStake();
 	UPROPERTY(VisibleAnywhere)
@@ -24,7 +27,7 @@ protected:
 		class UBoxComponent* Collider; //Creating a box collision range
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -41,9 +44,17 @@ public:
 
 
 protected: //Variables for functionality
-	bool isWithinRadius_; 
+	bool isWithinRadius_;
 	bool isActive_;
 	bool isTimerActive_;
 
-	float timer_ = 0.0f; 
+	float timer_ = 0.0f;
+	FVector startingPos;
+	float heightOffset; //Will refer to how much we need to levitate this
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite) //Tag for the variable - so can be edited in the blueprint
+		float movementScalar; 
+
+//UPROPERTY(VisibleAnywhere, BlueprintReadWrite) //Tag for the variable - so can be edited in the blueprint
+//	UProjectileMovementComponent* stakeMovement;
 };

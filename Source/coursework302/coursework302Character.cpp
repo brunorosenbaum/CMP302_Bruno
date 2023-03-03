@@ -39,8 +39,9 @@ Acoursework302Character::Acoursework302Character()
 
 	//Radius sphere for detecting stakes
 	PlayerRadius = CreateDefaultSubobject<USphereComponent>(TEXT("Radius Collision"));
-	PlayerRadius->InitSphereRadius(400.f); //Add dimensions to it
 	PlayerRadius->SetupAttachment(GetCapsuleComponent()); //Attaching the collider to the player's mesh
+	PlayerRadius->InitSphereRadius(400.f); //Add dimensions to it
+
 }
 
 void Acoursework302Character::BeginPlay()
@@ -48,11 +49,11 @@ void Acoursework302Character::BeginPlay()
 	// Call the base class  
 	Super::BeginPlay();
 
-	//Attaching the collision functions to the collider
+
+		//Attaching the collision functions to the collider
 	PlayerRadius->OnComponentBeginOverlap.AddDynamic(this, &Acoursework302Character::beginOverlapRadius);
 	PlayerRadius->OnComponentEndOverlap.AddDynamic(this, &Acoursework302Character::endOverlapRadius);
 
-	
 }
 
 void Acoursework302Character::Tick(float DeltaTime) {
@@ -180,6 +181,7 @@ void Acoursework302Character::endOverlapRadius(UPrimitiveComponent* overlapRadiu
 		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("Stake out of range"));
 
 		stake_->setWithinRadius(false);
+		stake_->setTimerActive(false);
 	}
 }
 
@@ -190,11 +192,17 @@ void Acoursework302Character::detectStakes() {
 		}
 		//Check if the current one is within the radius of detection 
 		if (stake->isWithinRadius()) {
-			if (isMousePressed_) { //If the mouse is pressed, toddle bool for timer
+			if (isMousePressed_) { //If the mouse is pressed, toggle bool for timer
+
 				stake->setTimerActive(true);
 				if (stake->isActive()) { //If three seconds of the timer have passed (active bool turns stake on active)
-					GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("Stake would be ready for physics"));
+					//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("Stake would be ready for physics"));
 				}
+			}
+			else 
+			{
+				stake->setTimerActive(false);
+
 			}
 		}
 	}
