@@ -2,6 +2,7 @@
 
 
 #include "Stake.h"
+#include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
 AStake::AStake()
@@ -18,6 +19,7 @@ AStake::AStake()
 	stakeMovement->ProjectileGravityScale = 0;
 	stakeMovement->Deactivate();
 	heightOffset = 0.0f;
+	rotTimer_ = 0.0f; 
 }
 
 // Called when the game starts or when spawned
@@ -27,6 +29,8 @@ void AStake::BeginPlay()
 	setWithinRadius(false); //Default should be false unless colliding with player's radius
 	setTimerActive(false);
 	setActive(false);
+	setReadyRot(false);
+
 	startingPos = GetActorLocation();
 	Collider->SetSimulatePhysics(false); //For protection - set them to false always before start of the game
 
@@ -49,7 +53,12 @@ void AStake::Tick(float DeltaTime)
 
 		setActive(true);
 	}
+	if (isReadyRot()) {
+		FRotator currentRot = GetTransform().GetRotation().Rotator(); 
 
+		FRotator newRot = UKismetMathLibrary::RInterpTo(currentRot, targetRotation, DeltaTime, 10.0f);
+		SetActorRotation(newRot); 
+	}
 
 	//Condition for levitating the stake object
 	if (isActive()) //Is active once mouse is pressed for > 3 sec
@@ -62,6 +71,10 @@ void AStake::Tick(float DeltaTime)
 
 		if (heightOffset > 200.f) { //Cap it at 200
 			heightOffset = 200.f;
+			rotTimer_ += DeltaTime;
+			if (rotTimer_ > 1.0f) { //If one second has elapsed
+				setReadyRot(true); 
+			}
 		}
 		//Update actors location by adding the offset
 		FVector newLocation = FVector(startingPos.X, startingPos.Y, startingPos.Z + heightOffset); 
@@ -78,7 +91,8 @@ void AStake::Tick(float DeltaTime)
 			heightOffset = 0.0f; //Reset here bc it doesnt get decreased outside of it
 		}
 		startingPos = GetTransform().GetLocation(); //Reset starting pos
-
+		setReadyRot(false); 
+		rotTimer_ = 0.0f; 
 	}
 }
 

@@ -41,7 +41,11 @@ public:
 	void setTimerActive(bool t) { isTimerActive_ = t; }
 	bool isTimerActive() { return isTimerActive_; }
 
+	void setTargetRotation(FRotator rot) { targetRotation = rot; }
+	FRotator getTargetRotation() { return targetRotation; }
 
+	void setReadyRot(bool r) { isReadyRot_ = r; }
+	bool isReadyRot() { return isReadyRot_; }
 
 protected: //Variables for functionality
 	bool isWithinRadius_;
@@ -49,7 +53,12 @@ protected: //Variables for functionality
 		bool isActive_;
 	bool isTimerActive_;
 
+	bool isReadyRot_; 
 	float timer_ = 0.0f;
+	float rotTimer_ = 0.0f;
+
+	FRotator targetRotation;
+
 	FVector startingPos;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite) //Tag for the variable - so can be edited in the blueprint
 		float heightOffset; //Will refer to how much we need to levitate this

@@ -6,6 +6,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/SphereComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Components/InputComponent.h"
 #include "GameFramework/InputSettings.h"
 #include "Stake.h"
@@ -196,7 +197,13 @@ void Acoursework302Character::detectStakes() {
 
 				stake->setTimerActive(true);
 				if (stake->isActive()) { //If three seconds of the timer have passed (active bool turns stake on active)
-					//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("Stake would be ready for physics"));
+					if (stake->isReadyRot()) { //If the stake is ready to rotate
+						FVector currentLoc = stake->GetTransform().GetLocation(); //Gets current location
+						FVector targetLoc = FirstPersonCameraComponent->GetForwardVector() * 1000; //Takes camera's forward vector, multiplies it by a scalar (so it is projected)
+						FRotator targetRot = UKismetMathLibrary::FindLookAtRotation(currentLoc, targetLoc); //Finds out rotation angle between current location and the target (where you want it to rotate towards)
+						//This is technically the dot product but this library does it for you. 
+						stake->setTargetRotation(targetRot); 
+					}
 				}
 			}
 			else 
