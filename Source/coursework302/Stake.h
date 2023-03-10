@@ -45,16 +45,18 @@ public:
 
 protected: //Variables for functionality
 	bool isWithinRadius_;
-	bool isActive_;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite) //Tag for the variable - so can be edited in the blueprint
+		bool isActive_;
 	bool isTimerActive_;
 
 	float timer_ = 0.0f;
 	FVector startingPos;
-	float heightOffset; //Will refer to how much we need to levitate this
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite) //Tag for the variable - so can be edited in the blueprint
+		float heightOffset; //Will refer to how much we need to levitate this
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite) //Tag for the variable - so can be edited in the blueprint
-		float movementScalar; 
+		float movementScalar;
 
-//UPROPERTY(VisibleAnywhere, BlueprintReadWrite) //Tag for the variable - so can be edited in the blueprint
-//	UProjectileMovementComponent* stakeMovement;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite) //Tag for the variable - so can be edited in the blueprint
+		UProjectileMovementComponent* stakeMovement;
 };

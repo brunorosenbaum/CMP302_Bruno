@@ -14,9 +14,9 @@ AStake::AStake()
 	stakeMesh->SetupAttachment(Collider);
 
 	//Create definition of movement component to be manipulated in the editor
-	//stakeMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Stake Movement"));
-	//stakeMovement->ProjectileGravityScale = 0;
-	//stakeMovement->Deactivate(); 
+	stakeMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Stake Movement"));
+	stakeMovement->ProjectileGravityScale = 0;
+	stakeMovement->Deactivate();
 	heightOffset = 0.0f;
 }
 
@@ -28,6 +28,7 @@ void AStake::BeginPlay()
 	setTimerActive(false);
 	setActive(false);
 	startingPos = GetActorLocation();
+	Collider->SetSimulatePhysics(false); //For protection - set them to false always before start of the game
 
 }
 
@@ -51,14 +52,32 @@ void AStake::Tick(float DeltaTime)
 
 
 	//Condition for levitating the stake object
-	if (isActive()) {
-		heightOffset += DeltaTime * movementScalar;
-		if (heightOffset > 100.f) {
-			heightOffset = 100.f;
-		}
+	if (isActive()) //Is active once mouse is pressed for > 3 sec
+	{
+		//GEngine->AddOnScreenDebugMessage(-1, .01f, FColor::Cyan, TEXT("Active"));
 
-		FVector newLocation = FVector(startingPos.X, startingPos.Y, startingPos.Z + heightOffset);
+		stakeMovement->ProjectileGravityScale = 0; //Gravity is 0 when it's on the ground 
+		
+		heightOffset += DeltaTime * movementScalar; //Add a height offset so it's added to the z axis of the object every frame
+
+		if (heightOffset > 200.f) { //Cap it at 200
+			heightOffset = 200.f;
+		}
+		//Update actors location by adding the offset
+		FVector newLocation = FVector(startingPos.X, startingPos.Y, startingPos.Z + heightOffset); 
 		SetActorLocation(newLocation);
+	}
+	else //Mouse is released
+	{
+		//GEngine->AddOnScreenDebugMessage(-1, .01f, FColor::Cyan, TEXT("Not Active"));
+
+		if (heightOffset > 0.0f) { //If it's lifted off the ground
+			stakeMovement->ProjectileGravityScale = 1; //Add gravity
+			stakeMovement->SetUpdatedComponent(RootComponent); //Reset the component so it can be modified again
+			stakeMovement->Activate(); 
+			heightOffset = 0.0f; //Reset here bc it doesnt get decreased outside of it
+		}
+		startingPos = GetTransform().GetLocation(); //Reset starting pos
 
 	}
 }
