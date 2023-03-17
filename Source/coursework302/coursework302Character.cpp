@@ -212,6 +212,7 @@ void Acoursework302Character::detectStakes() {
 				if (stake->isReadyRot()) {
 					//if (stake->GetTransform().GetRotation().Rotator() == stake->getTargetRotation()) {
 						stake->shootStake(); 
+						stake->setShot(true);
 					//}
 				}
 				stake->setTimerActive(false);

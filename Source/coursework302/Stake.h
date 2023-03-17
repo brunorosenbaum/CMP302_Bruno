@@ -32,7 +32,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	// Called for shooting
-	void shootStake(); 
+	void shootStake();
 
 	//Getters and setters for functionality
 	void setWithinRadius(bool s) { isWithinRadius_ = s; }
@@ -50,13 +50,23 @@ public:
 	void setReadyRot(bool r) { isReadyRot_ = r; }
 	bool isReadyRot() { return isReadyRot_; }
 
+	void setShot(bool s) { isShot_ = s; }
+	bool isShot() { return isShot_; }
+
+	void setGravityScale(float scale)
+	{
+		stakeMovement->ProjectileGravityScale = scale;
+	}
+
 protected: //Variables for functionality
 	bool isWithinRadius_;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite) //Tag for the variable - so can be edited in the blueprint
 		bool isActive_;
 	bool isTimerActive_;
 
-	bool isReadyRot_; 
+	bool isReadyRot_;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite) //Tag for the variable - so can be edited in the blueprint
+		bool isShot_;
 	float timer_ = 0.0f;
 	float rotTimer_ = 0.0f;
 

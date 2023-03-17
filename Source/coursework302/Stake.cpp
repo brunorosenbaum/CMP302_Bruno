@@ -31,6 +31,7 @@ void AStake::BeginPlay()
 	setTimerActive(false);
 	setActive(false);
 	setReadyRot(false);
+	setShot(false);
 
 	//Rotate 90 deg so the rotation method works as intended
 	FRotator beginRot = GetTransform().GetRotation().Rotator();
