@@ -31,6 +31,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	// Called for shooting
+	void shootStake(); 
+
 	//Getters and setters for functionality
 	void setWithinRadius(bool s) { isWithinRadius_ = s; }
 	bool isWithinRadius() { return isWithinRadius_; }

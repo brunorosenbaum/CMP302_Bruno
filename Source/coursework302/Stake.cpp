@@ -27,10 +27,15 @@ void AStake::BeginPlay()
 {
 	Super::BeginPlay();
 	setWithinRadius(false); //Default should be false unless colliding with player's radius
+	//Set boolean values to all the inactive ones upon beginplay
 	setTimerActive(false);
 	setActive(false);
 	setReadyRot(false);
 
+	//Rotate 90 deg so the rotation method works as intended
+	FRotator beginRot = GetTransform().GetRotation().Rotator();
+	beginRot.Pitch -= 90.0f;
+	SetActorRotation(beginRot); 
 	startingPos = GetActorLocation();
 	Collider->SetSimulatePhysics(false); //For protection - set them to false always before start of the game
 
@@ -57,6 +62,7 @@ void AStake::Tick(float DeltaTime)
 		FRotator currentRot = GetTransform().GetRotation().Rotator(); 
 
 		FRotator newRot = UKismetMathLibrary::RInterpTo(currentRot, targetRotation, DeltaTime, 10.0f);
+		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, FString::Printf(TEXT("Rotation %f %f %f"),targetRotation.Pitch, targetRotation.Roll, targetRotation.Yaw));
 		SetActorRotation(newRot); 
 	}
 
@@ -96,3 +102,14 @@ void AStake::Tick(float DeltaTime)
 	}
 }
 
+void AStake::shootStake() {
+
+	//Get a vector pointing in the direction of the stake's rotation
+	FVector targetLoc = GetTransform().GetRotation().Vector();
+	//Normalize it (needs to be to a value)
+	targetLoc.Normalize(0.001);
+	//And now multiply by a scalar to alter the projectile's velocity
+	stakeMovement->Velocity = targetLoc * 2000; 
+	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("Shootstake being called"));
+
+}

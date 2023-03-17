@@ -199,15 +199,21 @@ void Acoursework302Character::detectStakes() {
 				if (stake->isActive()) { //If three seconds of the timer have passed (active bool turns stake on active)
 					if (stake->isReadyRot()) { //If the stake is ready to rotate
 						FVector currentLoc = stake->GetTransform().GetLocation(); //Gets current location
-						FVector targetLoc = FirstPersonCameraComponent->GetForwardVector() * 1000; //Takes camera's forward vector, multiplies it by a scalar (so it is projected)
+						FVector targetLoc = GetActorLocation() + (FirstPersonCameraComponent->GetForwardVector() * 1000); //Takes camera's forward vector, multiplies it by a scalar (so it is projected)
 						FRotator targetRot = UKismetMathLibrary::FindLookAtRotation(currentLoc, targetLoc); //Finds out rotation angle between current location and the target (where you want it to rotate towards)
 						//This is technically the dot product but this library does it for you. 
 						stake->setTargetRotation(targetRot); 
+						
 					}
 				}
 			}
 			else 
 			{
+				if (stake->isReadyRot()) {
+					//if (stake->GetTransform().GetRotation().Rotator() == stake->getTargetRotation()) {
+						stake->shootStake(); 
+					//}
+				}
 				stake->setTimerActive(false);
 
 			}
