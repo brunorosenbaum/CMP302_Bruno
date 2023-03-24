@@ -57,6 +57,11 @@ public:
 	{
 		stakeMovement->ProjectileGravityScale = scale;
 	}
+	//Two functions needed: begin overlap and end overlap for the radius collider
+	UFUNCTION() //Needs to have this tag if you want it to be accessed in the blueprint
+		void beginOverlapStake(UPrimitiveComponent* overlapRadiusComp, AActor* otherActor, UPrimitiveComponent* otherComponent, int32 otherBodyIndex, bool fromSweep, const FHitResult& sweepResult);
+
+	
 
 protected: //Variables for functionality
 	bool isWithinRadius_;
@@ -81,4 +86,5 @@ protected: //Variables for functionality
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite) //Tag for the variable - so can be edited in the blueprint
 		UProjectileMovementComponent* stakeMovement;
+
 };

@@ -3,6 +3,8 @@
 #include "coursework302Projectile.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
+#include "coursework302Character.h"
+
 
 Acoursework302Projectile::Acoursework302Projectile() 
 {
@@ -34,10 +36,16 @@ Acoursework302Projectile::Acoursework302Projectile()
 void Acoursework302Projectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	// Only add impulse and destroy projectile if we hit a physics
-	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && OtherComp->IsSimulatingPhysics())
+	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
 	{
-		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("Bullet colliding with player"));
 
+		Acoursework302Character* mc_ = Cast<Acoursework302Character>(OtherActor);
+		if (IsValid(mc_)) { //Check if the ptr to this class is valid
+			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("Bullet colliding with player"));
+
+			mc_->takeDamage(); 
+		}
 		Destroy();
 	}
 }

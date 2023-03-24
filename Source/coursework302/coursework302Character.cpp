@@ -43,6 +43,7 @@ Acoursework302Character::Acoursework302Character()
 	PlayerRadius->SetupAttachment(GetCapsuleComponent()); //Attaching the collider to the player's mesh
 	PlayerRadius->InitSphereRadius(400.f); //Add dimensions to it
 
+	hp_ = 50.f;
 }
 
 void Acoursework302Character::BeginPlay()
@@ -60,6 +61,16 @@ void Acoursework302Character::BeginPlay()
 void Acoursework302Character::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 	detectStakes();
+	if (isRecoveryEnable_) {
+		if (hp_ >= 100.f) {
+			hp_ = 100.f;
+		}
+		else {
+			hp_ += 0.1;
+		}
+		
+
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////// Input
@@ -72,6 +83,9 @@ void Acoursework302Character::SetupPlayerInputComponent(class UInputComponent* P
 	// Bind jump events
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+	//Last thing is a reference to a function - thats why were not using getsetters for keyboard input and hp management
+	PlayerInputComponent->BindAction("RecoverHP", IE_Pressed, this, &Acoursework302Character::toggleRecovery);
+	PlayerInputComponent->BindAction("RecoverHP", IE_Released, this, &Acoursework302Character::toggleRecovery); 
 
 
 	// Bind movement events

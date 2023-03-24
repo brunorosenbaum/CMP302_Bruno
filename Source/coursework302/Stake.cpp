@@ -3,6 +3,8 @@
 
 #include "Stake.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Enemy.h"
+
 
 // Sets default values
 AStake::AStake()
@@ -39,6 +41,10 @@ void AStake::BeginPlay()
 	SetActorRotation(beginRot); 
 	startingPos = GetActorLocation();
 	Collider->SetSimulatePhysics(false); //For protection - set them to false always before start of the game
+
+	//Attaching the collision functions to the collider
+	Collider->OnComponentBeginOverlap.AddDynamic(this, &AStake::beginOverlapStake);
+	
 
 }
 
@@ -113,4 +119,14 @@ void AStake::shootStake() {
 	stakeMovement->Velocity = targetLoc * 2000; 
 	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("Shootstake being called"));
 
+}
+
+void AStake::beginOverlapStake(UPrimitiveComponent* overlapRadiusComp, AActor* otherActor, UPrimitiveComponent* otherComponent, int32 otherBodyIndex, bool fromSweep, const FHitResult& sweepResult) {
+	//Check when you overlap radius collider with stake collider
+	AEnemy* enemy_ = Cast<AEnemy>(otherActor);
+	if (IsValid(enemy_)) { //Check if the ptr to this class is valid
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("Stake colliding with enemy"));
+		float newEnemyHP = enemy_->getenemyHP() - 20.f;
+		enemy_->setEnemyHP(newEnemyHP);
+	}
 }

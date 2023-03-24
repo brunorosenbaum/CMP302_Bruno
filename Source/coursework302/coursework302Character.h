@@ -45,6 +45,9 @@ public:
 	/** Delegate to whom anyone can subscribe to receive this event */
 	UPROPERTY(BlueprintAssignable, Category = "Interaction")
 	FOnUseItem OnUseItem;
+
+
+
 protected:
 	
 	/** Fires a projectile. */
@@ -102,6 +105,9 @@ protected:
 
 	//Attributes
 	bool isMousePressed_;
+	float hp_;
+	bool isRecoveryEnable_;
+
 	
 protected:
 	// APawn interface
@@ -122,8 +128,22 @@ public:
 	/** Returns FirstPersonCameraComponent subobject **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 	//Add sphere collider for the player to detect stakes around it
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		class USphereComponent* PlayerRadius; 
+
+	void takeDamage() {
+		hp_ -= 10.f;
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FString::Printf(TEXT("HP: %f"), hp_));
+	}
+	//Toggling recovery for the action to be called via button press
+	void toggleRecovery(){
+		if (isRecoveryEnable_) {
+			isRecoveryEnable_ = false;
+		}
+		else {
+			isRecoveryEnable_ = true; 
+		}
+	}
 
 };
 
