@@ -78,6 +78,7 @@ protected: //Variables for functionality
 	FRotator targetRotation;
 
 	FVector startingPos;
+	FVector spawnPos;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite) //Tag for the variable - so can be edited in the blueprint
 		float heightOffset; //Will refer to how much we need to levitate this
 

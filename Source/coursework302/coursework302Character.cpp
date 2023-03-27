@@ -53,8 +53,11 @@ void Acoursework302Character::BeginPlay()
 
 
 		//Attaching the collision functions to the collider
-	PlayerRadius->OnComponentBeginOverlap.AddDynamic(this, &Acoursework302Character::beginOverlapRadius);
-	PlayerRadius->OnComponentEndOverlap.AddDynamic(this, &Acoursework302Character::endOverlapRadius);
+	if (IsValid(PlayerRadius))
+	{
+		PlayerRadius->OnComponentBeginOverlap.AddDynamic(this, &Acoursework302Character::beginOverlapRadius);
+		PlayerRadius->OnComponentEndOverlap.AddDynamic(this, &Acoursework302Character::endOverlapRadius);	
+	}
 
 }
 
@@ -62,14 +65,15 @@ void Acoursework302Character::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 	detectStakes();
 	if (isRecoveryEnable_) {
-		if (hp_ >= 100.f) {
-			hp_ = 100.f;
-		}
-		else {
-			hp_ += 0.1;
-		}
-		
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FString::Printf(TEXT("HP: %f"), hp_));
 
+		hp_ += 0.1;
+	}
+	if (hp_ >= 100.f) {
+		hp_ = 100.f;
+	}
+	if (hp_ < 0.0f) {
+		hp_ = 0.0f;
 	}
 }
 

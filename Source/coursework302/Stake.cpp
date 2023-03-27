@@ -40,6 +40,7 @@ void AStake::BeginPlay()
 	beginRot.Pitch -= 90.0f;
 	SetActorRotation(beginRot); 
 	startingPos = GetActorLocation();
+	spawnPos = startingPos; 
 	Collider->SetSimulatePhysics(false); //For protection - set them to false always before start of the game
 
 	//Attaching the collision functions to the collider
@@ -59,6 +60,12 @@ void AStake::Tick(float DeltaTime)
 		timer_ = 0.0f;
 		setActive(false);
 	}
+	if (GetActorLocation().Z < -100) 
+	{
+		SetActorLocationAndRotation(spawnPos, FRotator()); 
+		stakeMovement->Deactivate();
+	}
+
 
 	//Check if timer > 3 seconds, activate a bool
 	if (timer_ > 3.0f) {
@@ -116,7 +123,7 @@ void AStake::shootStake() {
 	//Normalize it (needs to be to a value)
 	targetLoc.Normalize(0.001);
 	//And now multiply by a scalar to alter the projectile's velocity
-	stakeMovement->Velocity = targetLoc * 2000; 
+	stakeMovement->Velocity = targetLoc * 2500; 
 	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("Shootstake being called"));
 
 }

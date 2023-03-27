@@ -31,10 +31,10 @@ protected:
 
 	//Two functions needed: begin overlap and end overlap for the radius collider
 	UFUNCTION() //Needs to have this tag if you want it to be accessed in the blueprint
-		void beginOverlapRadius(UPrimitiveComponent* overlapRadiusComp, AActor* otherActor, UPrimitiveComponent* otherComponent, int32 otherBodyIndex, bool fromSweep, const FHitResult& sweepResult);
+		void beginOverlap(UPrimitiveComponent* overlapRadiusComp, AActor* otherActor, UPrimitiveComponent* otherComponent, int32 otherBodyIndex, bool fromSweep, const FHitResult& sweepResult);
 
 	UFUNCTION()
-		void endOverlapRadius(UPrimitiveComponent* overlapRadiusComp, AActor* otherActor, UPrimitiveComponent* otherComponent, int32 otherBodyIndex);
+		void endOverlap(UPrimitiveComponent* overlapRadiusComp, AActor* otherActor, UPrimitiveComponent* otherComponent, int32 otherBodyIndex);
 
 public:	
 	// Called every frame

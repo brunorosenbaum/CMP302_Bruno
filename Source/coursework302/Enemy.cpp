@@ -44,8 +44,8 @@ void AEnemy::BeginPlay()
 	Super::BeginPlay();
 
 	//Attaching the collision functions to the collider
-	EnemyRadius->OnComponentBeginOverlap.AddDynamic(this, &AEnemy::beginOverlapRadius);
-	EnemyRadius->OnComponentEndOverlap.AddDynamic(this, &AEnemy::endOverlapRadius);
+	EnemyRadius->OnComponentBeginOverlap.AddDynamic(this, &AEnemy::beginOverlap);
+	EnemyRadius->OnComponentEndOverlap.AddDynamic(this, &AEnemy::endOverlap);
 
 }
 
@@ -77,7 +77,7 @@ void AEnemy::Tick(float DeltaTime)
 	}
 }
 
-void AEnemy::beginOverlapRadius(UPrimitiveComponent* overlapRadiusComp, AActor* otherActor, UPrimitiveComponent* otherComponent, int32 otherBodyIndex, bool fromSweep, const FHitResult& sweepResult) {
+void AEnemy::beginOverlap(UPrimitiveComponent* overlapRadiusComp, AActor* otherActor, UPrimitiveComponent* otherComponent, int32 otherBodyIndex, bool fromSweep, const FHitResult& sweepResult) {
 	//Check when you overlap radius collider with stake collider
 	Acoursework302Character* mc_ = Cast<Acoursework302Character>(otherActor);
 	if (IsValid(mc_)) { //Check if the ptr to this class is valid
@@ -86,7 +86,7 @@ void AEnemy::beginOverlapRadius(UPrimitiveComponent* overlapRadiusComp, AActor* 
 	}
 
 }
-void AEnemy::endOverlapRadius(UPrimitiveComponent* overlapRadiusComp, AActor* otherActor, UPrimitiveComponent* otherComponent, int32 otherBodyIndex) {
+void AEnemy::endOverlap(UPrimitiveComponent* overlapRadiusComp, AActor* otherActor, UPrimitiveComponent* otherComponent, int32 otherBodyIndex) {
 	//Check when you dont overlap radius collider with stake collider
 	Acoursework302Character* mc_ = Cast<Acoursework302Character>(otherActor);
 	if (IsValid(mc_)) { //Check if the ptr to this class is valid
