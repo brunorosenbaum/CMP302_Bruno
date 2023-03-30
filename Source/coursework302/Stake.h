@@ -60,6 +60,8 @@ public:
 	//Two functions needed: begin overlap and end overlap for the radius collider
 	UFUNCTION() //Needs to have this tag if you want it to be accessed in the blueprint
 		void beginOverlapStake(UPrimitiveComponent* overlapRadiusComp, AActor* otherActor, UPrimitiveComponent* otherComponent, int32 otherBodyIndex, bool fromSweep, const FHitResult& sweepResult);
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
 	
 
@@ -76,6 +78,7 @@ protected: //Variables for functionality
 	float rotTimer_ = 0.0f;
 
 	FRotator targetRotation;
+	FRotator startRotation;
 
 	FVector startingPos;
 	FVector spawnPos;

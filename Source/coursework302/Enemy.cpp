@@ -55,6 +55,8 @@ void AEnemy::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	if (enemyHp_ <= 0.f) { //Destroy this enemy if its hp gets to this level
 		Destroy();
+		
+		Cast<Acoursework302Character>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0))->setEnemiesKilled(1);
 	}
 	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Green, FString::Printf(TEXT("Enemy HP: %f"), enemyHp_));
 
@@ -81,7 +83,7 @@ void AEnemy::beginOverlap(UPrimitiveComponent* overlapRadiusComp, AActor* otherA
 	//Check when you overlap radius collider with stake collider
 	Acoursework302Character* mc_ = Cast<Acoursework302Character>(otherActor);
 	if (IsValid(mc_)) { //Check if the ptr to this class is valid
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("Player in enemy radius"));
+		//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("Player in enemy radius"));
 		isFiring_ = true;
 	}
 
@@ -90,7 +92,7 @@ void AEnemy::endOverlap(UPrimitiveComponent* overlapRadiusComp, AActor* otherAct
 	//Check when you dont overlap radius collider with stake collider
 	Acoursework302Character* mc_ = Cast<Acoursework302Character>(otherActor);
 	if (IsValid(mc_)) { //Check if the ptr to this class is valid
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("Player in enemy radius"));
+		//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("Player in enemy radius"));
 		isFiring_ = false;
 
 	}

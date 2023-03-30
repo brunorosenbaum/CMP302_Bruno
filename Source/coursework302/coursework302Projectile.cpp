@@ -38,11 +38,11 @@ void Acoursework302Projectile::OnHit(UPrimitiveComponent* HitComp, AActor* Other
 	// Only add impulse and destroy projectile if we hit a physics
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("Bullet colliding with player"));
+		//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("Bullet colliding with player"));
 
 		Acoursework302Character* mc_ = Cast<Acoursework302Character>(OtherActor);
 		if (IsValid(mc_)) { //Check if the ptr to this class is valid
-			GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("Bullet colliding with player"));
+			//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("Bullet colliding with player"));
 
 			mc_->takeDamage(); 
 		}

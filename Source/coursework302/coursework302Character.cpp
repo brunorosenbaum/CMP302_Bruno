@@ -50,7 +50,7 @@ void Acoursework302Character::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
-
+	killedEnemies_ = 0;
 
 		//Attaching the collision functions to the collider
 	if (IsValid(PlayerRadius))
@@ -65,7 +65,7 @@ void Acoursework302Character::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 	detectStakes();
 	if (isRecoveryEnable_) {
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FString::Printf(TEXT("HP: %f"), hp_));
+		//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, FString::Printf(TEXT("HP: %f"), hp_));
 
 		hp_ += 0.1;
 	}
@@ -189,7 +189,7 @@ void Acoursework302Character::beginOverlapRadius(UPrimitiveComponent* overlapRad
 	//Check when you overlap radius collider with stake collider
 	AStake* stake_ = Cast<AStake>(otherActor);
 	if (IsValid(stake_)) { //Check if the ptr to this class is valid
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("Stake in range"));
+		//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("Stake in range"));
 		stake_->setWithinRadius(true);
 	}
 }
@@ -197,7 +197,7 @@ void Acoursework302Character::endOverlapRadius(UPrimitiveComponent* overlapRadiu
 	//Check when you dont overlap radius collider with stake collider
 	AStake* stake_ = Cast<AStake>(otherActor);
 	if (IsValid(stake_)) { //Check if the ptr to this class is valid
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("Stake out of range"));
+		//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("Stake out of range"));
 
 		stake_->setWithinRadius(false);
 		stake_->setTimerActive(false);

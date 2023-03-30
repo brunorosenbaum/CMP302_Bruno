@@ -16,12 +16,14 @@ AStake::AStake()
 	stakeMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StakeMesh"));
 	stakeMesh->SetupAttachment(Collider);
 
+
 	//Create definition of movement component to be manipulated in the editor
 	stakeMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Stake Movement"));
 	stakeMovement->ProjectileGravityScale = 0;
 	stakeMovement->Deactivate();
 	heightOffset = 0.0f;
 	rotTimer_ = 0.0f; 
+	
 }
 
 // Called when the game starts or when spawned
@@ -42,9 +44,10 @@ void AStake::BeginPlay()
 	startingPos = GetActorLocation();
 	spawnPos = startingPos; 
 	Collider->SetSimulatePhysics(false); //For protection - set them to false always before start of the game
-
-	//Attaching the collision functions to the collider
-	Collider->OnComponentBeginOverlap.AddDynamic(this, &AStake::beginOverlapStake);
+	Collider->OnComponentHit.AddDynamic(this, &AStake::OnHit);		// set up a notification for when this component hits something blocking
+	startRotation = GetActorRotation(); 
+	////Attaching the collision functions to the collider
+	//Collider->OnComponentBeginOverlap.AddDynamic(this, &AStake::beginOverlapStake);
 	
 
 }
@@ -62,7 +65,7 @@ void AStake::Tick(float DeltaTime)
 	}
 	if (GetActorLocation().Z < -100) 
 	{
-		SetActorLocationAndRotation(spawnPos, FRotator()); 
+		SetActorLocationAndRotation(spawnPos, startRotation); 
 		stakeMovement->Deactivate();
 	}
 
@@ -124,7 +127,7 @@ void AStake::shootStake() {
 	targetLoc.Normalize(0.001);
 	//And now multiply by a scalar to alter the projectile's velocity
 	stakeMovement->Velocity = targetLoc * 2500; 
-	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("Shootstake being called"));
+	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("Shootstake being called"));
 
 }
 
@@ -132,8 +135,24 @@ void AStake::beginOverlapStake(UPrimitiveComponent* overlapRadiusComp, AActor* o
 	//Check when you overlap radius collider with stake collider
 	AEnemy* enemy_ = Cast<AEnemy>(otherActor);
 	if (IsValid(enemy_)) { //Check if the ptr to this class is valid
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("Stake colliding with enemy"));
-		float newEnemyHP = enemy_->getenemyHP() - 20.f;
+		//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("Stake colliding with enemy"));
+		float newEnemyHP = enemy_->getenemyHP() - 50.f;
 		enemy_->setEnemyHP(newEnemyHP);
+	}
+}
+
+void AStake::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Red, TEXT("Stake hit with enemy"));
+
+	// Only add impulse and destroy projectile if we hit a physics
+	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
+	{
+		AEnemy* enemy_ = Cast<AEnemy>(OtherActor);
+		if (IsValid(enemy_)) { //Check if the ptr to this class is valid
+			//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Cyan, TEXT("Stake hit with enemy"));
+			float newEnemyHP = enemy_->getenemyHP() - 50.f;
+			enemy_->setEnemyHP(newEnemyHP);
+		}
 	}
 }

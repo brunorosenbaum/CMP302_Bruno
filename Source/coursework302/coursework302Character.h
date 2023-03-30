@@ -105,8 +105,11 @@ protected:
 
 	//Attributes
 	bool isMousePressed_;
-	float hp_;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float hp_;
 	bool isRecoveryEnable_;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int killedEnemies_; 
 
 	
 protected:
@@ -145,5 +148,7 @@ public:
 		}
 	}
 
+	int getEnemiesKilled() { return killedEnemies_; }
+	void setEnemiesKilled(int e) { killedEnemies_ += e;  }
 };
 
